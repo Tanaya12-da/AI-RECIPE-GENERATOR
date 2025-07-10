@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>What are you Craving?</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <!-- Blurred Background Image -->
+  <div class="background-blur"></div>
+
+  <div class="container">
+    <h1>🍽️ What are you craving?</h1>
+    <form id="recipe-form">
+      <input type="text" name="ingredients" placeholder="Ingredients (e.g. chicken, garlic)" required><br>
+      <input type="text" name="dietary" placeholder="Dietary needs (e.g. gluten-free)" required><br>
+      <input type="text" name="cuisine" placeholder="Cuisine (e.g. Italian)" required><br>
+      <button type="submit">Generate Recipe</button>
+    </form>
+
+    <div id="result">
+      <img id="dish-image" src="" alt="Generated Dish" style="display: none;">
+      <pre id="recipe-output"></pre>
+    </div>
+  </div>
+    <!-- Image Carousel -->
+    <div class="carousel-container">
+      <div class="carousel">
+        <img src="https://images.unsplash.com/photo-1556761223-4c4282c73f77?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=mae-mu-Pvclb-iHHYY-unsplash.jpg" />
+        <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=riccardo-bergamini-O2yNzXdqOu0-unsplash.jpg" />
+        <img src="https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=amirali-mirhashemian-jh5XyK4Rr3Y-unsplash.jpg" />
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=chad-montano-MqT0asuoIcU-unsplash.jpg" />
+        <img src="https://images.unsplash.com/photo-1505976378723-9726b54e9bb9?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=christiann-koepke-AigxB1zfRVo-unsplash.jpg" />
+        <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=chad-montano-lP5MCM6nZ5A-unsplash.jpg" />
+        <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=chad-montano-eeqbbemH9-c-unsplash.jpg" />
+        <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb&dl=joseph-gonzalez-fdlZBWIP0aM-unsplash.jpg" />
+      </div>
+    </div>
+
+    <!-- Background Music -->
+    <audio autoplay loop>
+      <source src="https://cdn.pixabay.com/download/audio/2022/08/11/audio_5e7e35d5a8.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+  <script>
+    const form = document.getElementById('recipe-form');
+    const output = document.getElementById('recipe-output');
+    const image = document.getElementById('dish-image');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      output.textContent = "Generating recipe...";
+      image.style.display = 'none';
+
+      const formData = new FormData(form);
+      const response = await fetch('/generate', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (data.recipe) {
+        output.textContent = data.recipe;
+        image.src = data.image_url;
+        image.style.display = 'block';
+      } else {
+        output.textContent = "Error: " + data.error;
+      }
+    });
+  </script>
+</body>
+</html>
